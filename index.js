@@ -81,7 +81,7 @@ async function run() {
     // Make post
     app.post("/makePost", async (req, res) => {
       const query = req.body;
-      console.log(query);
+      // console.log(query);
       const result = await allpostDB.insertOne(query);
       res.send(result);
     });
@@ -89,7 +89,8 @@ async function run() {
     // Read all post
     app.get("/allpost", async (req, res) => {
       const query = {};
-      const result = await allpostDB.find(query).toArray();
+      const sort = { like: -1 };
+      const result = await allpostDB.find(query).sort(sort).toArray();
       res.send(result);
     });
 
@@ -104,8 +105,8 @@ async function run() {
     // like post
     app.patch("/onepost/:id", async (req, res) => {
       const id = req.params.id;
-      const likeNo = req.query.likeNo;
-      console.log(id, likeNo);
+      const likeNo = parseInt(req.query.likeNo);
+      console.log(likeNo);
       const query = { _id: ObjectId(id) };
       const updateDoc = {
         $set: {
