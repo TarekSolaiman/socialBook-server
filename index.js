@@ -46,6 +46,23 @@ async function run() {
       res.send(result);
     });
 
+    // Edit about with id
+    app.patch("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      const editData = req.body;
+      console.log(editData);
+      const query = { _id: ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          name: editData.name,
+          address: editData.address,
+          university: editData.university,
+        },
+      };
+      const result = await userDB.updateOne(query, updateDoc);
+      res.send(result);
+    });
+
     // Make comment
     app.post("/makeComment", async (req, res) => {
       const query = req.body;
