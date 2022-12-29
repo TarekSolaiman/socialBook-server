@@ -23,7 +23,29 @@ const client = new MongoClient(uri, {
 async function run() {
   const allpostDB = client.db("socialBook").collection("allPosts");
   const commentDB = client.db("socialBook").collection("comments");
+  const userDB = client.db("socialBook").collection("users");
   try {
+    // Make a user
+    app.post("/user", async (req, res) => {
+      const userData = req.body;
+      const email = { email: userData.email };
+      console.log(userData, email);
+      const isUser = await userDB.findOne(email);
+      if (isUser) {
+        res.send({ message: "Exesting User" });
+      }
+      const result = await userDB.insertOne(userData);
+      res.send(result);
+    });
+
+    // Read user by email
+    app.get("/user/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await userDB.findOne(query);
+      res.send(result);
+    });
+
     // Make comment
     app.post("/makeComment", async (req, res) => {
       const query = req.body;
